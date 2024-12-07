@@ -1,0 +1,15 @@
+.timer-text {
+
+}
+
+.timer-wrapper {
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+
+}
+
+.text-wrapper {
+  display: flex;
+  justify-content: center;
+}
