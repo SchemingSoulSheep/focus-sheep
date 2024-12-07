@@ -29,3 +29,15 @@
 import './index.css';
 
 console.log('👋 This message is being logged by "renderer.ts", included via Vite');
+
+async function test() {
+    const task = await window.electronAPI.getTask();
+
+    console.log(task);
+
+    document.querySelector('p').textContent = task.length ? task[0].task : 'No task found';
+}
+
+const h1 = document.querySelector('h1');
+
+h1.addEventListener('click', test);

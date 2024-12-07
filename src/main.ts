@@ -1,6 +1,8 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import started from 'electron-squirrel-startup';
+import { db, dbPath, runPrismaCommand } from './prisma';
+const fs = require('fs');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -25,13 +27,24 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+  if (!fs.existsSync()) fs.closeSync(fs.openSync(dbPath, 'w'));
+  runPrismaCommand({
+    command: ['migrate', 'deploy', '--schema', path.join(app.getAppPath().replace('app.asar', 'app.asar.unpacked'), 'prisma', 'schema.prisma')],
+    dbUrl: `file:${dbPath}`
+  });
+
+  ipcMain.handle('get-task', () => {
+    return db.task.findMany();
+  });
+  createWindow();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
