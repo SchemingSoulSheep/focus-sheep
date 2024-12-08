@@ -25,7 +25,7 @@ export const Home = () => {
       >
         click meh ples
       </h1>
-      {tasks}
+      {tasks.map((task) => task.task)}
     </div>
   );
 };

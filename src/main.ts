@@ -36,7 +36,7 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", () => {
-  if (!fs.existsSync()) fs.closeSync(fs.openSync(dbPath, "w"));
+  if (!fs.existsSync(dbPath)) fs.closeSync(fs.openSync(dbPath, "w"));
   runPrismaCommand({
     command: [
       "migrate",
